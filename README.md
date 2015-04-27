@@ -1,15 +1,17 @@
-# DISTRHO Mini-Series
+# GuitarSynth
+GuitarSynth is a set of wavetable synths controlled by a pitchdetector.
+Actually it is not specific to guitars but can be used for any harmonic instrument.
+This is a small petproject of mine to explore the possibilities of pitchdetection for Guitars.
+It uses aubio for pitch detection, but that will change as I want to write my own detector.
+Required:
+libjack, aubio
 
-A collection of small but useful plugins, based on the good old LOSER-Dev Plugins.
+Compile:
 
-This collection currently includes:<br/>
- - 3 Band EQ
- - 3 Band Splitter
- - Ping Pong Pan
+make
 
-## Screenshots
-3 Band EQ:<br/>
-![3 Band EQ](https://raw.githubusercontent.com/DISTRHO/mini-series/master/plugins/3BandEQ/Screenshot.png "3 Band EQ")<br/>
+That's it you should have am executable GuitarSynth2.
+Start it, connect in qjackctl an audio source, turn up the gain on one the synths (beware with the square synth!!)
+You mix the synths by turning up their individual gains.
+Have fun
 
-Ping Pong Pan:<br/>
-![Ping Pong Pan](https://raw.githubusercontent.com/DISTRHO/mini-series/master/plugins/PingPongPan/Screenshot.png "Ping Pong Pan")<br/>
