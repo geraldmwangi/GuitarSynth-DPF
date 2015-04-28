@@ -9,7 +9,7 @@ Plugin* DISTRHO::createPlugin()
     return new GuitarSynthDSPPlugin();
 }
 GuitarSynthDSPPlugin::GuitarSynthDSPPlugin():
-    Plugin(14,1,0)
+    Plugin(14,0,0)
 {
     mInstance=GSEngine::getInstance();
     mInstance->addSynth(new SinusSynth);

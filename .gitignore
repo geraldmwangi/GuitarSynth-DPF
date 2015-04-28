@@ -1,2 +1,14 @@
 *.creator.user
 *.autosave
+
+*.a
+*.d
+*.o
+*.exe
+*.zip
+
+bin/*ladspa*
+bin/*dssi*
+bin/*lv2*
+bin/*vst*
+bin/GuitarSynth

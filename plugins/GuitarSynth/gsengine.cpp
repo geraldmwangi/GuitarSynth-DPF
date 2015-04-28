@@ -196,6 +196,10 @@ int GSEngine::process(const float **inputs, float **outputs, uint32_t frames)
     return 0;
 }
 
+void GSEngine::sendFrequence(float val)
+{
+    // TODO implement this
+}
 
 
 float GSEngine::getMagnitude(uint32_t frames, const float *buffer)

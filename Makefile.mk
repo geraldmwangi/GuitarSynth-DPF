@@ -79,6 +79,13 @@ LINK_FLAGS      = $(LINK_OPTS) $(LDFLAGS)
 endif
 
 # --------------------------------------------------------------
+# Check for required libs
+
+ifneq ($(shell pkg-config --exists aubio && echo true), true)
+$(error libaubio missing, cannot continue)
+endif
+
+# --------------------------------------------------------------
 # Check for optional libs
 
 ifeq ($(LINUX),true)
@@ -97,6 +104,9 @@ endif
 
 # --------------------------------------------------------------
 # Set libs stuff
+
+AUBIO_FLAGS = $(shell pkg-config --cflags aubio)
+AUBIO_LIBS  = $(shell pkg-config --libs aubio)
 
 ifeq ($(HAVE_DGL),true)
 
