@@ -17,7 +17,7 @@ This file is part of GuitarSynth2.
 #include "sawsynth.h"
 
 SawSynth::SawSynth():
-    SynthBase(parent,"SawSynth")
+    SynthBase("SawSynth")
 {
 }
 

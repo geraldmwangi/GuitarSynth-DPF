@@ -11,15 +11,16 @@ NAME = GuitarSynth
 
 # --------------------------------------------------------------
 # Files to build
-SYNTH_OBJS= gausssynth.cpp.o\
-	    sinussynth.cpp.o \
-	    sawsynth.cpp.o \
-	    squaresynth.cpp.o
+
 
 OBJS_DSP = \
 	gsengine.cpp.o \
 	synthbase.cpp.o \
-	guitarsynthdspplugin.cpp.o
+	guitarsynthdspplugin.cpp.o \
+	gausssynth.cpp.o \
+	sinussynth.cpp.o \
+	sawsynth.cpp.o \
+	squaresynth.cpp.o
 
 
 

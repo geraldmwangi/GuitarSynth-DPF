@@ -18,7 +18,7 @@ This file is part of GuitarSynth2.
 #include <math.h>
 
 SquareSynth::SquareSynth():
-    SynthBase(parent,"SquareSynth")
+    SynthBase("SquareSynth")
 {
 }
 
@@ -54,5 +54,5 @@ void SquareSynth::InitSynth()
 void SquareSynth::InitControls()
 {
     radius=0;
-    addControl("Radius",radius,0,1,true);
+//    addControl("Radius",radius,0,1,true);
 }

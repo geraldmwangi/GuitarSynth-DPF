@@ -20,10 +20,10 @@ This file is part of GuitarSynth2.
 class GaussSynth : public SynthBase
 {
 public:
-    GaussSynth(QWidget* parent);
+    GaussSynth();
     virtual void InitSynth();
     virtual void InitControls();
-private:
+//private:
     float sdfactor;
 };
 

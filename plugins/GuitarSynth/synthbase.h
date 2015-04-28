@@ -42,11 +42,12 @@ public:
 
 
     void updateWaveTable();
-protected:
+
+
     float phase;
     float ampl;
     float transposefactor;
-
+protected:
     float curFreq;
     float curTablePos;
     float* mWaveTable;

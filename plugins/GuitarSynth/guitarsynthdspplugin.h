@@ -1,27 +1,29 @@
 #ifndef GUITARSYNTHDSPPLUGIN_H
 #define GUITARSYNTHDSPPLUGIN_H
-#include <DistrhoPlugin.hpp>
+
+#include <gsengine.h>
 using namespace DISTRHO;
 class GuitarSynthDSPPlugin: public Plugin
 {
 public:
     GuitarSynthDSPPlugin();
+    ~GuitarSynthDSPPlugin();
     // -------------------------------------------------------------------
     // Information
 
     const char* getLabel() const noexcept override
     {
-        return "3BandEQ";
+        return "GuitarSynth";
     }
 
     const char* getMaker() const noexcept override
     {
-        return "DISTRHO";
+        return "Gerald Mwangi";
     }
 
     const char* getLicense() const noexcept override
     {
-        return "LGPL";
+        return "GPL";
     }
 
     uint32_t getVersion() const noexcept override
@@ -31,7 +33,7 @@ public:
 
     int64_t getUniqueId() const noexcept override
     {
-        return d_cconst('D', '3', 'E', 'Q');
+        return d_cconst('G', 'S', 'G', 'M');
     }
 
     // -------------------------------------------------------------------
@@ -53,6 +55,8 @@ public:
     void activate() override;
     void deactivate() override;
     void run(const float** inputs, float** outputs, uint32_t frames) override;
+private:
+    GSEngine* mInstance;
 
     // -------------------------------------------------------------------
 };

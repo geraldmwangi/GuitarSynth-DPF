@@ -30,7 +30,7 @@ GSEngine::GSEngine()
     mOutBuf=0;
     mLowPassBuff=0;
     mFreqBuf=new_fvec(1);
-    InitNetwork();
+//    InitEngine();
     lastfreq=0;
     mDelayin[0]=0;
     mDelayin[1]=0;
@@ -39,6 +39,10 @@ GSEngine::GSEngine()
 
     mDampingFactor=10.0;
     mCuttOfFreq=6000;
+    mInputGain=1.0;
+    mOutputGain=1.0;
+    mSamplerate=44100;
+    mBufferSize=512;
 
 
 }
@@ -46,6 +50,8 @@ GSEngine::GSEngine()
 GSEngine::~GSEngine()
 {
     StopEngine();
+    for(int s=0;s<mSynths.size();s++)
+        delete mSynths[s];
     if(mInBuf)
         delete [] mInBuf;
     mInBuf=0;
@@ -58,45 +64,46 @@ GSEngine::~GSEngine()
 
 }
 
-void GSEngine::InitNetwork()
+void GSEngine::InitEngine(uint32_t samplerate,uint32_t buffersize)
 {
-    mClient=jack_client_open("GuitarSynth",JackNullOption,0);
 
-    if(mClient==0)
-        this->errorMessage("Could not initialize Jack");
-
-    if(jack_set_process_callback(mClient,GSEngine::process,0)!=0)
-        this->errorMessage("Could not set Jack Process callback");
-
-    mInput_port=jack_port_register (mClient, "input", JACK_DEFAULT_AUDIO_TYPE, JackPortIsInput, 0);
-    mOutput_port=jack_port_register (mClient, "output", JACK_DEFAULT_AUDIO_TYPE, JackPortIsOutput, 0);
-
-
-    mMidiOut=jack_port_register(mClient,"midiout",JACK_DEFAULT_MIDI_TYPE,JackPortIsOutput,0);
-    mSamplerate=jack_get_sample_rate(mClient);
-    mBufferSize=jack_get_buffer_size(mClient);
+    mSamplerate=samplerate;
+    mBufferSize=buffersize;
     std::cout<<"Samplerate "<<mSamplerate<<" Buffersize "<<mBufferSize<<std::endl;
 
 
     mPitchDetector=new_aubio_pitch("yinfft",2*mBufferSize,mBufferSize,mSamplerate);
     //aubio_pitchdetection_set_yinthresh(mPitchDetector,1);
     mInputMag=0;
+    if(mInBuf)
+        delete [] mInBuf;
+    if(mOutBuf)
+        delete [] mOutBuf;
+    if(mLowPassBuff)
+        delete [] mLowPassBuff;
     mInBuf=new float[mBufferSize];
     mOutBuf=new float[mBufferSize];
     mLowPassBuff=new float[mBufferSize];
+    for(int s=0;s<mSynths.size();s++)
+    {
+        SynthBase* synth=mSynths[s];
+        synth->setBufferSize(buffersize);
+        synth->setSamplerate(samplerate);
+        synth->InitBaseSynth();
+    }
 
 }
 
 void GSEngine::StartEngine()
 {
 
-    jack_activate(mClient);
+
 
 }
 
 void GSEngine::StopEngine()
 {
-    jack_deactivate(mClient);
+
 
 }
 
@@ -119,9 +126,9 @@ void GSEngine::setOutputGain(int val)
 
 void GSEngine::addSynth(SynthBase *synth)
 {
-    synth->setSamplerate(mSamplerate);
-    synth->setBufferSize(mBufferSize);
-    synth->InitBaseSynth();
+//    synth->setSamplerate(mSamplerate);
+//    synth->setBufferSize(mBufferSize);
+//    synth->InitBaseSynth();
     mSynths.push_back(synth);
 
 
@@ -141,11 +148,10 @@ GSEngine * GSEngine::getInstance()
     return mInstance;
 }
 
-int GSEngine::process(jack_nframes_t frames, void *arg)
+int GSEngine::process(const float **inputs, float **outputs, uint32_t frames)
 {
-    jack_default_audio_sample_t* in=(jack_default_audio_sample_t*)jack_port_get_buffer(mInstance->mInput_port,frames);
-    jack_default_audio_sample_t* out=(jack_default_audio_sample_t*)jack_port_get_buffer(mInstance->mOutput_port,frames);
-
+    const float* in=inputs[0];
+    float* out=outputs[0];
 
     mInstance->lowpassIn(frames,in);
 
@@ -161,7 +167,7 @@ int GSEngine::process(jack_nframes_t frames, void *arg)
 
 
 
-    memset(out,0,frames*sizeof(jack_default_audio_sample_t));
+    memset(out,0,frames*sizeof(float));
 
     if(getMagnitude(frames,in)>1)
     {
@@ -180,7 +186,7 @@ int GSEngine::process(jack_nframes_t frames, void *arg)
             mInstance->mSynths[i]->process(frames,out,freq);
 
         }
-        for(jack_nframes_t f=0;f<frames;f++)
+        for(uint32_t f=0;f<frames;f++)
             out[f]*=mInstance->mOutputGain;
         mInstance->sendFrequence(freq);
     }
@@ -192,16 +198,16 @@ int GSEngine::process(jack_nframes_t frames, void *arg)
 
 
 
-float GSEngine::getMagnitude(jack_nframes_t frames, float *buffer)
+float GSEngine::getMagnitude(uint32_t frames, const float *buffer)
 {
     float mag=0;
-    for(jack_nframes_t i=0;i<frames;i++)
+    for(uint32_t i=0;i<frames;i++)
         mag+=buffer[i]*buffer[i];
     mag=sqrt(mag);
     return mag;
 }
 
-void GSEngine::rectifyIn(int frames,float *in)
+void GSEngine::rectifyIn(int frames, const float *in)
 {
     for(int i=0;i<frames;i++)
     {
@@ -209,7 +215,7 @@ void GSEngine::rectifyIn(int frames,float *in)
     }
 }
 
-void GSEngine::lowpassIn(int frames, jack_default_audio_sample_t *in)
+void GSEngine::lowpassIn(uint32_t frames, const float *in)
 {
     float C=1.0/tan(3.14*mCuttOfFreq/mSamplerate);
     float b0=1.0/(1.0+2.0*mDampingFactor*C+C*C);

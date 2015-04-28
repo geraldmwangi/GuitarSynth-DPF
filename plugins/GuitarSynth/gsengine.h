@@ -17,14 +17,13 @@ This file is part of GuitarSynth2.
     along with GuitarSynth2.  If not, see <http://www.gnu.org/licenses/>.
     */
 
-#include <jack/jack.h>
-#include <jack/midiport.h>
 #include <aubio/aubio.h>
 #include <aubio/pitch/pitch.h>
 #include <vector>
 #include <string>
 #include <stdio.h>
 #include <string.h>
+#include <DistrhoPlugin.hpp>
 using namespace std;
 class SynthBase;
 class GSEngine
@@ -33,12 +32,12 @@ class GSEngine
 public:
     static void errorMessage(string err);
     GSEngine();
-    void InitNetwork();
+    void InitEngine(uint32_t samplerate, uint32_t buffersize);
     void StartEngine();
     void StopEngine();
 
-    static int process(jack_nframes_t frames,void* arg);
-    static float getMagnitude(jack_nframes_t frames,float* buffer);
+    static int process(const float** inputs, float** outputs, uint32_t frames);
+    static float getMagnitude(uint32_t frames, const float *buffer);
 
     static GSEngine *getInstance();
 
@@ -56,26 +55,25 @@ public:
 
     void setInputGain(int val);
     void setOutputGain(int val);
+    vector<SynthBase*> mSynths;
 private:
 
     float mInputGain;
     float mOutputGain;
     float mInputMag;
-    vector<SynthBase*> mSynths;
-    jack_nframes_t mSamplerate;
-    jack_nframes_t mBufferSize;
+
+    uint32_t mSamplerate;
+    uint32_t mBufferSize;
 
 
-    void rectifyIn(int frames,float* in);
-    void lowpassIn(int frames,jack_default_audio_sample_t* in);
+    void rectifyIn(int frames,const float* in);
+    void lowpassIn(uint32_t frames, const float *in);
 
     float* mInBuf;
     float* mOutBuf;
-    jack_port_t *mInput_port;
-    jack_port_t *mOutput_port;
+
     fvec_t* mFreqBuf;
-    jack_port_t *mMidiOut;
-    jack_client_t *mClient;
+
     aubio_pitch_t* mPitchDetector;
     float lastfreq;
 
@@ -83,7 +81,7 @@ private:
     float mDelayout[2];
     float mCuttOfFreq;
     float mDampingFactor;
-    jack_default_audio_sample_t* mLowPassBuff;
+    float* mLowPassBuff;
 
 
 

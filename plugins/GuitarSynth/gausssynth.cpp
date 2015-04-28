@@ -17,8 +17,8 @@ This file is part of GuitarSynth2.
 #include "gausssynth.h"
 #include <math.h>
 
-GaussSynth::GaussSynth(QWidget* parent):
-    SynthBase(parent,"GaussSynth")
+GaussSynth::GaussSynth():
+    SynthBase("GaussSynth")
 {
 }
 
@@ -35,5 +35,5 @@ void GaussSynth::InitSynth()
 void GaussSynth::InitControls()
 {
     sdfactor=2;
-    addControl("Formfactor",sdfactor,0.1,10,true);
+//    addControl("Formfactor",sdfactor,0.1,10,true);
 }

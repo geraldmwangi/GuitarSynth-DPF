@@ -18,7 +18,7 @@ This file is part of GuitarSynth2.
 #include <math.h>
 
 SinusSynth::SinusSynth():
-    SynthBase(parent,"SinusSynth")
+    SynthBase("SinusSynth")
 {
 }
 
