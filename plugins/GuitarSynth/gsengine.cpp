@@ -136,10 +136,7 @@ void GSEngine::addSynth(SynthBase *synth)
 
 
 
-void GSEngine::errorMessage(std::string err)
-{
-#warning implement!
-}
+
 
 
 

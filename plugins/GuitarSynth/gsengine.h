@@ -30,7 +30,7 @@ class GSEngine
 {
 
 public:
-    static void errorMessage(string err);
+
     GSEngine();
     void InitEngine(uint32_t samplerate, uint32_t buffersize);
     void StartEngine();
