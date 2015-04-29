@@ -9,7 +9,7 @@ Plugin* DISTRHO::createPlugin()
     return new GuitarSynthDSPPlugin();
 }
 GuitarSynthDSPPlugin::GuitarSynthDSPPlugin():
-    Plugin(14,0,0)
+    Plugin(15,0,0)
 {
     mInstance=GSEngine::getInstance();
     mInstance->addSynth(new SinusSynth);
@@ -127,7 +127,11 @@ void GuitarSynthDSPPlugin::initParameter(uint32_t index, Parameter &parameter)
         parameter.symbol="SquareRoundRad";
 
         break;
-
+    case 14:
+        parameter.name="Input Threshold";
+        parameter.ranges=ParameterRanges(0.1,0,1);
+        parameter.symbol="InputThresh";
+        break;
 
 
     }
@@ -246,7 +250,7 @@ float GuitarSynthDSPPlugin::getParameterValue(uint32_t index) const
 //        parameter.name="Square Phase";
 //        parameter.ranges=ParameterRanges(0.1,-1,1);
 //        parameter.symbol="SquarePh";
-        synth=mInstance->mSynths[2];
+        synth=mInstance->mSynths[3];
         res=synth->phase;
         break;
     case 12:
@@ -254,6 +258,9 @@ float GuitarSynthDSPPlugin::getParameterValue(uint32_t index) const
 //        parameter.name="Square Transpose";
 //        parameter.ranges=ParameterRanges(0.1,-1,1);
 //        parameter.symbol="SquareTr";
+        synth=mInstance->mSynths[3];
+        square=dynamic_cast<SquareSynth*>(synth);
+        res=square->transposefactor;
 
         break;
     case 13:
@@ -261,9 +268,16 @@ float GuitarSynthDSPPlugin::getParameterValue(uint32_t index) const
 //        parameter.name="Square Rounding Radius";
 //        parameter.ranges=ParameterRanges(0.1,0,1);
 //        parameter.symbol="SquareRoundRad";
-
+        synth=mInstance->mSynths[3];
+        square=dynamic_cast<SquareSynth*>(synth);
+        res=square->radius;
         break;
-
+    case 14:
+//        parameter.name="Input Threshold";
+//        parameter.ranges=ParameterRanges(0.1,0,1);
+//        parameter.symbol="InputThresh";
+        res=mInstance->mInputThreshold;
+        break;
 
 
     }
@@ -361,6 +375,7 @@ void GuitarSynthDSPPlugin::setParameterValue(uint32_t index, float value)
         synth=mInstance->mSynths[2];
         gauss=dynamic_cast<GaussSynth*>(synth);
         gauss->sdfactor=value;
+        synth->updateWaveTable();
 
         break;
     case 10:
@@ -376,7 +391,7 @@ void GuitarSynthDSPPlugin::setParameterValue(uint32_t index, float value)
 //        parameter.name="Square Phase";
 //        parameter.ranges=ParameterRanges(0.1,-1,1);
 //        parameter.symbol="SquarePh";
-        synth=mInstance->mSynths[2];
+        synth=mInstance->mSynths[3];
         synth->phase=value;
         break;
     case 12:
@@ -384,6 +399,9 @@ void GuitarSynthDSPPlugin::setParameterValue(uint32_t index, float value)
 //        parameter.name="Square Transpose";
 //        parameter.ranges=ParameterRanges(0.1,-1,1);
 //        parameter.symbol="SquareTr";
+        synth=mInstance->mSynths[3];
+        synth->transposefactor=value;
+
 
         break;
     case 13:
@@ -391,12 +409,23 @@ void GuitarSynthDSPPlugin::setParameterValue(uint32_t index, float value)
 //        parameter.name="Square Rounding Radius";
 //        parameter.ranges=ParameterRanges(0.1,0,1);
 //        parameter.symbol="SquareRoundRad";
+        synth=mInstance->mSynths[3];
+        square=dynamic_cast<SquareSynth*>(synth);
+        square->radius=value;
+        synth->updateWaveTable();
+    case 14:
+//        parameter.name="Input Threshold";
+//        parameter.ranges=ParameterRanges(0.1,0,1);
+//        parameter.symbol="InputThresh";
+        mInstance->mInputThreshold=value;
+        break;
 
         break;
 
 
 
     }
+
 }
 
 //void GuitarSynthDSPPlugin::loadProgram(uint32_t index)

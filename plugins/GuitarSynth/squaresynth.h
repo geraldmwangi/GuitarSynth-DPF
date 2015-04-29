@@ -28,7 +28,7 @@ public:
 
     virtual void InitSynth();
     virtual void InitControls();
-private:
+
     float radius;
 };
 

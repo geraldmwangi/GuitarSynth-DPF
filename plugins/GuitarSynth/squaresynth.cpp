@@ -20,6 +20,7 @@ This file is part of GuitarSynth2.
 SquareSynth::SquareSynth():
     SynthBase("SquareSynth")
 {
+
 }
 
 void SquareSynth::InitSynth()

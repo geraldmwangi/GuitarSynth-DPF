@@ -27,7 +27,7 @@ GSEngine::GSEngine()
 {
     mInstance=this;
     mInBuf=0;
-    mOutBuf=0;
+
     mLowPassBuff=0;
     mFreqBuf=new_fvec(1);
 //    InitEngine();
@@ -36,14 +36,14 @@ GSEngine::GSEngine()
     mDelayin[1]=0;
     mDelayout[0]=0;
     mDelayout[1]=0;
-
+    mPitchDetector=0;
     mDampingFactor=10.0;
     mCuttOfFreq=6000;
     mInputGain=1.0;
     mOutputGain=1.0;
     mSamplerate=44100;
     mBufferSize=512;
-
+    mInputThreshold=0;
 
 }
 
@@ -55,12 +55,12 @@ GSEngine::~GSEngine()
     if(mInBuf)
         delete [] mInBuf;
     mInBuf=0;
-    if(mOutBuf)
-        delete [] mOutBuf;
-    mOutBuf=0;
+
     if(mLowPassBuff)
         delete [] mLowPassBuff;
     del_fvec(mFreqBuf);
+    if(mPitchDetector)
+        del_aubio_pitch(mPitchDetector);
 
 }
 
@@ -70,19 +70,19 @@ void GSEngine::InitEngine(uint32_t samplerate,uint32_t buffersize)
     mSamplerate=samplerate;
     mBufferSize=buffersize;
     std::cout<<"Samplerate "<<mSamplerate<<" Buffersize "<<mBufferSize<<std::endl;
-
+    if(mPitchDetector)
+        del_aubio_pitch(mPitchDetector);
 
     mPitchDetector=new_aubio_pitch("yinfft",2*mBufferSize,mBufferSize,mSamplerate);
     //aubio_pitchdetection_set_yinthresh(mPitchDetector,1);
     mInputMag=0;
     if(mInBuf)
         delete [] mInBuf;
-    if(mOutBuf)
-        delete [] mOutBuf;
+
     if(mLowPassBuff)
         delete [] mLowPassBuff;
     mInBuf=new float[mBufferSize];
-    mOutBuf=new float[mBufferSize];
+
     mLowPassBuff=new float[mBufferSize];
     for(int s=0;s<mSynths.size();s++)
     {
@@ -169,7 +169,7 @@ int GSEngine::process(const float **inputs, float **outputs, uint32_t frames)
 
     memset(out,0,frames*sizeof(float));
 
-    if(getMagnitude(frames,in)>1)
+    if(getMagnitude(frames,in)>=mInstance->mInputThreshold)
     {
         Buf.data=mInstance->mInBuf;
         Buf.length=frames;
@@ -188,7 +188,7 @@ int GSEngine::process(const float **inputs, float **outputs, uint32_t frames)
         }
         for(uint32_t f=0;f<frames;f++)
             out[f]*=mInstance->mOutputGain;
-        mInstance->sendFrequence(freq);
+
     }
 //    else
 //        mInstance->sendFrequence(0);
@@ -196,18 +196,15 @@ int GSEngine::process(const float **inputs, float **outputs, uint32_t frames)
     return 0;
 }
 
-void GSEngine::sendFrequence(float val)
-{
-    // TODO implement this
-}
+
 
 
 float GSEngine::getMagnitude(uint32_t frames, const float *buffer)
 {
     float mag=0;
     for(uint32_t i=0;i<frames;i++)
-        mag+=buffer[i]*buffer[i];
-    mag=sqrt(mag);
+        mag+=fabs(buffer[i]);
+    mag=mag/frames;
     return mag;
 }
 

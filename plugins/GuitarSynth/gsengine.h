@@ -41,7 +41,6 @@ public:
 
     static GSEngine *getInstance();
 
-    void sendFrequence(float val);
 
 
     void addSynth(SynthBase* synth);
@@ -56,6 +55,7 @@ public:
     void setInputGain(int val);
     void setOutputGain(int val);
     vector<SynthBase*> mSynths;
+    float mInputThreshold;
 private:
 
     float mInputGain;
@@ -70,7 +70,7 @@ private:
     void lowpassIn(uint32_t frames, const float *in);
 
     float* mInBuf;
-    float* mOutBuf;
+
 
     fvec_t* mFreqBuf;
 

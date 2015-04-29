@@ -28,7 +28,7 @@ SynthBase::SynthBase(string name)
     mWaveTable=0;
     mWindow=0;
 
-    transposefactor=1;
+    transposefactor=0;
     curFreq=BASE_FREQ;
     curTablePos=0;
     phase=0;
@@ -92,7 +92,7 @@ void SynthBase::process(int frames, float *buffer, float freq)
 {
 
 
-    curFreq=freq*transposefactor;
+    curFreq=freq*pow(2.0,transposefactor);
     float ph=phase*mWaveTableSize/2;
     for(int i=0;i<frames;i++)
     {
