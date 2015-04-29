@@ -36,10 +36,10 @@ public:
     void StartEngine();
     void StopEngine();
 
-    static int process(const float** inputs, float** outputs, uint32_t frames);
-    static float getMagnitude(uint32_t frames, const float *buffer);
+     int process(const float** inputs, float** outputs, uint32_t frames);
+     float getMagnitude(uint32_t frames, const float *buffer);
 
-    static GSEngine *getInstance();
+
 
 
 
@@ -49,7 +49,7 @@ public:
 
 
 
-    static GSEngine* mInstance;
+
 
 
     void setInputGain(int val);

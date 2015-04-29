@@ -21,11 +21,11 @@ This file is part of GuitarSynth2.
 #include "gsengine.h"
 
 
-GSEngine* GSEngine::mInstance=0;
+
 
 GSEngine::GSEngine()
 {
-    mInstance=this;
+
     mInBuf=0;
 
     mLowPassBuff=0;
@@ -141,25 +141,20 @@ void GSEngine::errorMessage(std::string err)
 #warning implement!
 }
 
-GSEngine * GSEngine::getInstance()
-{
-    if(mInstance==0)
-        mInstance=new GSEngine();
-    return mInstance;
-}
+
 
 int GSEngine::process(const float **inputs, float **outputs, uint32_t frames)
 {
     const float* in=inputs[0];
     float* out=outputs[0];
 
-    mInstance->lowpassIn(frames,in);
+    lowpassIn(frames,in);
 
-    mInstance->rectifyIn(frames,mInstance->mLowPassBuff);
+    rectifyIn(frames,mLowPassBuff);
 
 //    for(int i=0;i<frames;i++)
 //    {
-//        (mInstance->mInBuf)[i]=(in[i]+fabs(in[i]))/2;
+//        (mInBuf)[i]=(in[i]+fabs(in[i]))/2;
 //    }
     fvec_t Buf;
 
@@ -169,29 +164,29 @@ int GSEngine::process(const float **inputs, float **outputs, uint32_t frames)
 
     memset(out,0,frames*sizeof(float));
 
-    if(getMagnitude(frames,in)>=mInstance->mInputThreshold)
+    if(getMagnitude(frames,in)>=mInputThreshold)
     {
-        Buf.data=mInstance->mInBuf;
+        Buf.data=mInBuf;
         Buf.length=frames;
         float freq;
 
-        aubio_pitch_do(mInstance->mPitchDetector,&Buf,mInstance->mFreqBuf);
-        freq=mInstance->mFreqBuf->data[0];
+        aubio_pitch_do(mPitchDetector,&Buf,mFreqBuf);
+        freq=mFreqBuf->data[0];
 
         freq=floor(freq);
         if(freq<0)
             freq=0;
-        for(int i=0;i<mInstance->mSynths.size();i++)
+        for(int i=0;i<mSynths.size();i++)
         {
-            mInstance->mSynths[i]->process(frames,out,freq);
+            mSynths[i]->process(frames,out,freq);
 
         }
         for(uint32_t f=0;f<frames;f++)
-            out[f]*=mInstance->mOutputGain;
+            out[f]*=mOutputGain;
 
     }
 //    else
-//        mInstance->sendFrequence(0);
+//        sendFrequence(0);
 
     return 0;
 }

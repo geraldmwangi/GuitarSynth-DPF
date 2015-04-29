@@ -11,7 +11,7 @@ Plugin* DISTRHO::createPlugin()
 GuitarSynthDSPPlugin::GuitarSynthDSPPlugin():
     Plugin(15,0,0)
 {
-    mInstance=GSEngine::getInstance();
+    mInstance=new GSEngine();
     mInstance->addSynth(new SinusSynth);
     mInstance->addSynth(new SawSynth);
     mInstance->addSynth(new GaussSynth);
@@ -445,6 +445,6 @@ void GuitarSynthDSPPlugin::deactivate()
 
 void GuitarSynthDSPPlugin::run(const float **inputs, float **outputs, uint32_t frames)
 {
-    GSEngine::process(inputs,outputs,frames);
+    mInstance->process(inputs,outputs,frames);
 
 }
