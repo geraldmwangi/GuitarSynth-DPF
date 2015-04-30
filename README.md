@@ -8,6 +8,10 @@ libjack, aubio
 
 Compile:
 
+cd ./path/to/GuitarSynth-DPF
+git submodule init
+git submodule update 
+
 make
 
 That's it you should have am executable GuitarSynth2.
