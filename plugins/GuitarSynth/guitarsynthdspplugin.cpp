@@ -95,7 +95,7 @@ void GuitarSynthDSPPlugin::initParameter(uint32_t index, Parameter &parameter)
     case 9:
 
         parameter.name="Gauss Standard Deviation";
-        parameter.ranges=ParameterRanges(0.1,0.1,1);
+        parameter.ranges=ParameterRanges(0.5,0.1,10);
         parameter.symbol="GaussStDev";
 
         break;
@@ -413,6 +413,7 @@ void GuitarSynthDSPPlugin::setParameterValue(uint32_t index, float value)
         square=dynamic_cast<SquareSynth*>(synth);
         square->radius=value;
         synth->updateWaveTable();
+        break;
     case 14:
 //        parameter.name="Input Threshold";
 //        parameter.ranges=ParameterRanges(0.1,0,1);

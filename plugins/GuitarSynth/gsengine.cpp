@@ -75,7 +75,7 @@ void GSEngine::InitEngine(uint32_t samplerate,uint32_t buffersize)
 
     mPitchDetector=new_aubio_pitch("yinfft",2*mBufferSize,mBufferSize,mSamplerate);
     //aubio_pitchdetection_set_yinthresh(mPitchDetector,1);
-    mInputMag=0;
+
     if(mInBuf)
         delete [] mInBuf;
 
@@ -204,7 +204,7 @@ void GSEngine::rectifyIn(int frames, const float *in)
 {
     for(int i=0;i<frames;i++)
     {
-        mInBuf[i]=mInputGain*(in[i]+fabs(in[i]))/2;
+        mInBuf[i]=mInputGain*(in[i]+fabs(in[i]))/2.0;
     }
 }
 

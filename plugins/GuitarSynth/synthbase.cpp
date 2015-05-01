@@ -49,9 +49,13 @@ void SynthBase::InitBaseSynth()
     mWaveTableSize=mSamplerate/BASE_FREQ;
     if(mWaveTableSize!=0)
     {
+        if(mWaveTable)
+            delete [] mWaveTable;
         mWaveTable=new float[mWaveTableSize];
 
     }
+    if(mWindow)
+        delete [] mWindow;
     if(mBufferSize!=0)
         mWindow=new float[mBufferSize];
     //Blackman-Harris see wikipedia
