@@ -127,3 +127,5 @@ Makefile.mk
 plugins/GuitarSynth/DistrhoPluginInfo.h
 plugins/GuitarSynth/guitarsynthdspplugin.h
 plugins/GuitarSynth/guitarsynthdspplugin.cpp
+plugins/GuitarSynth/parameterwithref.h
+plugins/GuitarSynth/parameterwithref.cpp
