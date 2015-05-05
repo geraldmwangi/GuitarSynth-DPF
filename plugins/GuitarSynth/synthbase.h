@@ -41,17 +41,25 @@ public:
 
 
 
+
     void updateWaveTable();
 
+    float freqband;
+    float freqcuttoff;
 
     float phase;
     float ampl;
     float transposefactor;
 protected:
+    void bandpass(int frames, float* buffer);
+    float mDelayIn[2];
+    float mDelayOut[2];
     float curFreq;
     float curTablePos;
     float* mWaveTable;
     float* mWindow;
+
+    float* mOutBuffer;
 
     int mWaveTableSize;
     int mBufferSize;

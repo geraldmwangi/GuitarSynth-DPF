@@ -27,7 +27,7 @@ SynthBase::SynthBase(string name)
     mBufferSize=0;
     mWaveTable=0;
     mWindow=0;
-
+    mOutBuffer=0;
     transposefactor=0;
     curFreq=BASE_FREQ;
     curTablePos=0;
@@ -41,6 +41,8 @@ SynthBase::~SynthBase()
         delete [] mWaveTable;
     if(mWindow)
         delete [] mWindow;
+    if(mOutBuffer)
+        delete [] mOutBuffer;
 
 }
 
@@ -66,9 +68,15 @@ void SynthBase::InitBaseSynth()
                 +a/2*cos(4*M_PI*i/(mBufferSize-1));
     }
 
+    if(mOutBuffer)
+        delete [] mOutBuffer;
+    mOutBuffer=new float[mBufferSize];
 
     memset(mWaveTable,0,mWaveTableSize*sizeof(float));
-
+    mDelayIn[0]=0;
+    mDelayIn[1]=0;
+    mDelayOut[0]=0;
+    mDelayOut[1]=0;
     InitControls();
     InitSynth();
 
@@ -114,8 +122,9 @@ void SynthBase::process(int frames, float *buffer, float freq)
 
         int intPos=floor(tablepos);
         float delta=tablepos-intPos;
-        buffer[i]+=ampl*(mWaveTable[intPos]+delta*(mWaveTable[(intPos+1)%mWaveTableSize]-mWaveTable[intPos]));
+        mOutBuffer[i]+=ampl*(mWaveTable[intPos]+delta*(mWaveTable[(intPos+1)%mWaveTableSize]-mWaveTable[intPos]));
 //                +0.5*delta*delta*(mWaveTable[(intPos==0)?(mWaveTableSize-1):(intPos-1)]+mWaveTable[(intPos+1)%mWaveTableSize]-2*mWaveTable[intPos]));
+        bandpass(frames,buffer);
 
 
     }
@@ -127,6 +136,27 @@ void SynthBase::process(int frames, float *buffer, float freq)
 void SynthBase::updateWaveTable()
 {
     InitSynth();
+}
+
+void SynthBase::bandpass(int frames, float *buffer)
+{
+    float c=std::tan(3.14*freqband/mSamplerate);
+    float d=std::tan(3.14*freqcuttoff/mSamplerate);
+    for(int i=0;i<frames;i++)
+    {
+       buffer[i]=-c*mOutBuffer[i]+d*(1-c)*mDelayIn[0]+mDelayIn[1]
+               +d*(1-c)*mDelayOut[0]-c*mDelayOut[1];
+       if(i>0)
+       {
+           mDelayIn[0]=mOutBuffer[i-1];
+           mDelayOut[0]=buffer[i-1];
+       }
+       if(i>1)
+       {
+           mDelayIn[1]=mOutBuffer[i-2];
+           mDelayOut[1]=buffer[i-2];
+       }
+    }
 }
 
 void SynthBase::InitControls()

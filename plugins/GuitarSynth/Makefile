@@ -20,7 +20,8 @@ OBJS_DSP = \
 	gausssynth.cpp.o \
 	sinussynth.cpp.o \
 	sawsynth.cpp.o \
-	squaresynth.cpp.o
+	squaresynth.cpp.o \
+	parameterwithref.cpp.o
 
 
 
