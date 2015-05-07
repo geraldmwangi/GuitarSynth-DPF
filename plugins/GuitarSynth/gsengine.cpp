@@ -145,14 +145,15 @@ int GSEngine::process(const float **inputs, float **outputs, uint32_t frames)
         float freq;
         freq=mFreqBuf->data[0];
 
-        freq=floor(freq);
+//        freq=floor(freq);
         if(freq<0)
             freq=0;
-        for(int i=0;i<mSynths.size();i++)
-        {
-            mSynths[i]->process(frames,out,freq);
+        if(freq>0)
+            for(int i=0;i<mSynths.size();i++)
+            {
+                mSynths[i]->process(frames,out,freq);
 
-        }
+            }
 //        for(uint32_t f=0;f<frames;f++)
 //            out[f]*=in[f];
 
