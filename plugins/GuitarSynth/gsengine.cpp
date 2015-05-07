@@ -127,8 +127,9 @@ int GSEngine::process(const float **inputs, float **outputs, uint32_t frames)
 
 
 
+    for(int i=0;i<frames;i++)
+        out[i]=0.0f;
 
-    memset(out,0,frames*sizeof(float));
 
     if(getMagnitude(frames,in)>=mInputThreshold)
     {
@@ -156,6 +157,8 @@ int GSEngine::process(const float **inputs, float **outputs, uint32_t frames)
 //            out[f]*=in[f];
 
     }
+
+
 
 
     return 0;
