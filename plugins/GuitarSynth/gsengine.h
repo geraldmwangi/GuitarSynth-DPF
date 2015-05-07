@@ -30,47 +30,39 @@ class GSEngine
 {
 
 public:
-
+    //Initialization
     GSEngine();
     void InitEngine(uint32_t samplerate, uint32_t buffersize);
-    void StartEngine();
-    void StopEngine();
 
+    //Main process call
      int process(const float** inputs, float** outputs, uint32_t frames);
+
+     //Get magnitude of signal to detect when to to trigger synths
      float getMagnitude(uint32_t frames, const float *buffer);
 
-
-
-
-
+     //Add new synth
     void addSynth(SynthBase* synth);
     ~GSEngine();
 
 
-
-
-
-
-
-    void setInputGain(int val);
-    void setOutputGain(int val);
     vector<SynthBase*> mSynths;
     float mInputThreshold;
 private:
+    //Rectify signal. This spreads the frequency range and helps the localization of low frequencies
+    void rectifyIn(int frames,const float* in);
 
-    float mInputGain;
-    float mOutputGain;
-    float mInputMag;
+    //low pass at 6k to reduce artifacts from picking with plektrum
+    void lowpassIn(uint32_t frames, const float *in);
 
     uint32_t mSamplerate;
     uint32_t mBufferSize;
 
 
-    void rectifyIn(int frames,const float* in);
-    void lowpassIn(uint32_t frames, const float *in);
+
 
     float* mInBuf;
-
+    int mInBufCount;
+    int mInBufSize;
 
     fvec_t* mFreqBuf;
 

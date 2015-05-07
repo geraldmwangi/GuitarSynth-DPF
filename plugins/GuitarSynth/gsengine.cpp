@@ -21,7 +21,7 @@ This file is part of GuitarSynth2.
 #include "gsengine.h"
 
 
-
+//Constructor
 
 GSEngine::GSEngine()
 {
@@ -39,17 +39,15 @@ GSEngine::GSEngine()
     mPitchDetector=0;
     mDampingFactor=10.0;
     mCuttOfFreq=6000;
-    mInputGain=1.0;
-    mOutputGain=1.0;
     mSamplerate=44100;
     mBufferSize=512;
     mInputThreshold=0;
+    mInBufSize=0;
 
 }
-
+//Destructor
 GSEngine::~GSEngine()
 {
-    StopEngine();
     for(int s=0;s<mSynths.size();s++)
         delete mSynths[s];
     if(mInBuf)
@@ -63,27 +61,33 @@ GSEngine::~GSEngine()
         del_aubio_pitch(mPitchDetector);
 
 }
-
+//Initialization
 void GSEngine::InitEngine(uint32_t samplerate,uint32_t buffersize)
 {
 
     mSamplerate=samplerate;
     mBufferSize=buffersize;
-    std::cout<<"Samplerate "<<mSamplerate<<" Buffersize "<<mBufferSize<<std::endl;
+
     if(mPitchDetector)
         del_aubio_pitch(mPitchDetector);
+    //Buffersize for analysis needs to be large enough to estimate low frequencies
+    mInBufSize=mBufferSize*3;
 
-    mPitchDetector=new_aubio_pitch("yinfft",2*mBufferSize,mBufferSize,mSamplerate);
-    //aubio_pitchdetection_set_yinthresh(mPitchDetector,1);
+    mPitchDetector=new_aubio_pitch("yinfft",mInBufSize,mBufferSize,mSamplerate);
+
 
     if(mInBuf)
         delete [] mInBuf;
 
     if(mLowPassBuff)
         delete [] mLowPassBuff;
-    mInBuf=new float[mBufferSize];
 
+    mInBuf=new float[mInBufSize];
+    memset(mInBuf,0,mInBufSize*sizeof(float));
+    mInBufCount=0;
     mLowPassBuff=new float[mBufferSize];
+
+    //Initialization of the synths
     for(int s=0;s<mSynths.size();s++)
     {
         SynthBase* synth=mSynths[s];
@@ -93,42 +97,10 @@ void GSEngine::InitEngine(uint32_t samplerate,uint32_t buffersize)
     }
 
 }
-
-void GSEngine::StartEngine()
-{
-
-
-
-}
-
-void GSEngine::StopEngine()
-{
-
-
-}
-
-
-
-
-
-void GSEngine::setInputGain(int val)
-{
-    mInputGain=((float)val/100.0f);
-
-
-}
-
-void GSEngine::setOutputGain(int val)
-{
-    mOutputGain=((float)val/100.0f);
-
-}
-
+//Add new synth
 void GSEngine::addSynth(SynthBase *synth)
 {
-//    synth->setSamplerate(mSamplerate);
-//    synth->setBufferSize(mBufferSize);
-//    synth->InitBaseSynth();
+
     mSynths.push_back(synth);
 
 
@@ -139,7 +111,7 @@ void GSEngine::addSynth(SynthBase *synth)
 
 
 
-
+//Main process call
 int GSEngine::process(const float **inputs, float **outputs, uint32_t frames)
 {
     const float* in=inputs[0];
@@ -149,13 +121,10 @@ int GSEngine::process(const float **inputs, float **outputs, uint32_t frames)
 
     rectifyIn(frames,mLowPassBuff);
 
-//    for(int i=0;i<frames;i++)
-//    {
-//        (mInBuf)[i]=(in[i]+fabs(in[i]))/2;
-//    }
+
     fvec_t Buf;
 
-    //Buf.channels=1;
+
 
 
 
@@ -163,11 +132,16 @@ int GSEngine::process(const float **inputs, float **outputs, uint32_t frames)
 
     if(getMagnitude(frames,in)>=mInputThreshold)
     {
-        Buf.data=mInBuf;
-        Buf.length=frames;
-        float freq;
+        if(mInBufCount==0)
+        {
+            Buf.data=mInBuf;
+            Buf.length=mInBufSize;
 
-        aubio_pitch_do(mPitchDetector,&Buf,mFreqBuf);
+
+
+            aubio_pitch_do(mPitchDetector,&Buf,mFreqBuf);
+        }
+        float freq;
         freq=mFreqBuf->data[0];
 
         freq=floor(freq);
@@ -178,19 +152,18 @@ int GSEngine::process(const float **inputs, float **outputs, uint32_t frames)
             mSynths[i]->process(frames,out,freq);
 
         }
-        for(uint32_t f=0;f<frames;f++)
-            out[f]*=mOutputGain;
+//        for(uint32_t f=0;f<frames;f++)
+//            out[f]*=in[f];
 
     }
-//    else
-//        sendFrequence(0);
+
 
     return 0;
 }
 
 
 
-
+//Get magnitude of signal to detect when to to trigger synths
 float GSEngine::getMagnitude(uint32_t frames, const float *buffer)
 {
     float mag=0;
@@ -199,15 +172,17 @@ float GSEngine::getMagnitude(uint32_t frames, const float *buffer)
     mag=mag/frames;
     return mag;
 }
-
+//Rectify signal. This spreads the frequency range and helps the localization of low frequencies
 void GSEngine::rectifyIn(int frames, const float *in)
 {
     for(int i=0;i<frames;i++)
     {
-        mInBuf[i]=mInputGain*(in[i]+fabs(in[i]))/2.0;
+        mInBuf[mInBufCount]=(in[i]+fabs(in[i]))/2.0;
+        mInBufCount=(mInBufCount==mInBufSize-1)?0:(mInBufCount+1);
+
     }
 }
-
+//low pass at 6k to reduce artifacts from picking with plektrum
 void GSEngine::lowpassIn(uint32_t frames, const float *in)
 {
     float C=1.0/tan(3.14*mCuttOfFreq/mSamplerate);
