@@ -19,7 +19,7 @@ This file is part of GuitarSynth2.
 
 #include <gsengine.h>
 #include <string>
-#define BASE_FREQ 1.0f
+#define BASE_FREQ 80.0f
 using namespace std;
 
 
