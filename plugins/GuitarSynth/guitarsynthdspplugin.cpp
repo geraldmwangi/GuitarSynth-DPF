@@ -138,7 +138,7 @@ void GuitarSynthDSPPlugin::initParameter(uint32_t index, Parameter &parameter)
 
 }
 
-//void GuitarSynthDSPPlugin::initProgramName(uint32_t index, String &programName)
+//void GuitarSynthDSPPlugin::initProgramName(uint32_t index, string &programName)
 //{
 
 //}
@@ -375,7 +375,7 @@ void GuitarSynthDSPPlugin::setParameterValue(uint32_t index, float value)
         synth=mInstance->mSynths[2];
         gauss=dynamic_cast<GaussSynth*>(synth);
         gauss->sdfactor=value;
-        synth->updateWaveTable();
+
 
         break;
     case 10:
@@ -412,7 +412,7 @@ void GuitarSynthDSPPlugin::setParameterValue(uint32_t index, float value)
         synth=mInstance->mSynths[3];
         square=dynamic_cast<SquareSynth*>(synth);
         square->radius=value;
-        synth->updateWaveTable();
+
         break;
     case 14:
 //        parameter.name="Input Threshold";

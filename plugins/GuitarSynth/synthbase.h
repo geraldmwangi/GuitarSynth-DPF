@@ -23,7 +23,7 @@ This file is part of GuitarSynth2.
 using namespace std;
 
 
-class SynthBase
+class SynthBase:public ParameteredObject
 {
 
 public:
@@ -42,7 +42,7 @@ public:
 
 
 
-    void updateWaveTable();
+
 
     float freqband;
     float freqcuttoff;
@@ -70,6 +70,22 @@ protected:
 
 
 
+};
+
+class SynthBaseUpdateWaveTable:public ParameterFunctionCallback
+{
+    SynthBase* mSynth;
+protected:
+    virtual void postChange()
+    {
+        mSynth->InitSynth();
+    }
+
+public:
+    SynthBaseUpdateWaveTable(SynthBase* synth)
+    {
+        mSynth=synth;
+    }
 };
 
 #endif // SYNTHBASE_H

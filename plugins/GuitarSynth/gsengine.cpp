@@ -14,16 +14,18 @@ This file is part of GuitarSynth2.
     You should have received a copy of the GNU General Public License
     along with GuitarSynth2.  If not, see <http://www.gnu.org/licenses/>.
     */
+#include "gsengine.h"
 #include "synthbase.h"
 
 #include <iostream>
 #include <math.h>
-#include "gsengine.h"
+
+#include <DistrhoPlugin.hpp>
 
 
-
-
-GSEngine::GSEngine()
+using namespace DISTRHO;
+GSEngine::GSEngine():
+    ParameteredObject(string("GSEngine"),string("GSEngine"),string("GSEngine"))
 {
 
     mInBuf=0;
@@ -44,6 +46,8 @@ GSEngine::GSEngine()
     mSamplerate=44100;
     mBufferSize=512;
     mInputThreshold=0;
+    addParameter(mInputThreshold,kParameterIsLogarithmic,"Input Threshold","InputThr","db",
+                 ParameterRanges(0,1,0.1));
 
 }
 

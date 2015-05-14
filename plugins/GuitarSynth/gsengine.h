@@ -17,21 +17,22 @@ This file is part of GuitarSynth2.
     along with GuitarSynth2.  If not, see <http://www.gnu.org/licenses/>.
     */
 
+#include <parameteredobject.h>
 #include <aubio/aubio.h>
 #include <aubio/pitch/pitch.h>
 #include <vector>
-#include <string>
+//#include <string>
 #include <stdio.h>
-#include <string.h>
-#include <DistrhoPlugin.hpp>
+//#include <string.h>
+
 using namespace std;
 class SynthBase;
-class GSEngine
+class GSEngine:public ParameteredObject
 {
 
 public:
 
-    GSEngine();
+    explicit GSEngine();
     void InitEngine(uint32_t samplerate, uint32_t buffersize);
     void StartEngine();
     void StopEngine();

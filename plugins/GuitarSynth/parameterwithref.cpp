@@ -1,30 +1,24 @@
 #include "parameterwithref.h"
 
-void ParameterWithRef::preChange()
-{
 
-}
 
-void ParameterWithRef::postChange()
-{
 
-}
 
-ParameterWithRef::ParameterWithRef(float& par, uint32_t hints, String name, String symbol, String unit, ParameterRanges ranges):
-    mParameter(par)
+ParameterWithRef::ParameterWithRef(float &par, uint32_t hints, string name, string symbol, string unit, ParameterRanges ranges, ParameterFunctionCallback action):
+    mParameter(par),mCallback(action)
 {
     Parameter::hints=hints;
-    Parameter::name=name;
-    Parameter::symbol=symbol;
+    Parameter::name=name.c_str();
+    Parameter::symbol=symbol.c_str();
     Parameter::ranges=ranges;
-    Parameter::unit=unit;
+    Parameter::unit=unit.c_str();
 }
 
 void ParameterWithRef::setParameter(float val)
 {
-    preChange();
+    mCallback.preChange();
     mParameter=val;
-    postChange();
+    mCallback.postChange();
 }
 
 float ParameterWithRef::getParameter()

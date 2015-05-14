@@ -18,7 +18,8 @@ This file is part of GuitarSynth2.
 #include <gsengine.h>
 #include <math.h>
 
-SynthBase::SynthBase(string name)
+SynthBase::SynthBase(string name):
+    ParameteredObject(name,name,string("Synth"))
 {
 
 
@@ -33,6 +34,12 @@ SynthBase::SynthBase(string name)
     curTablePos=0;
     phase=0;
     ampl=0;
+    addParameter(transposefactor,kParameterIsAutomable,mName+" Transpose",mName+"Tr",
+                 "",ParameterRanges(-1,1,0.1));
+    addParameter(phase,kParameterIsAutomable,mName+" Phase",mName+"Ph",
+                 "",ParameterRanges(-1,1,0.1));
+    addParameter(ampl,kParameterIsAutomable,mName+" Gain",mName+"Gain",
+                 "",ParameterRanges(0,1,0.1));
 }
 
 SynthBase::~SynthBase()
@@ -133,10 +140,7 @@ void SynthBase::process(int frames, float *buffer, float freq)
 
 }
 
-void SynthBase::updateWaveTable()
-{
-    InitSynth();
-}
+
 
 void SynthBase::bandpass(int frames, float *buffer)
 {

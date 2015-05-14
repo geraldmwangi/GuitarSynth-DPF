@@ -20,7 +20,8 @@ This file is part of GuitarSynth2.
 SquareSynth::SquareSynth():
     SynthBase("SquareSynth")
 {
-
+    addParameter(radius,kParameterIsAutomable,mName+" Radius",mName+"Radius","",ParameterRanges(0,1,0.1)
+                 ,SynthBaseUpdateWaveTable(this));
 }
 
 void SquareSynth::InitSynth()

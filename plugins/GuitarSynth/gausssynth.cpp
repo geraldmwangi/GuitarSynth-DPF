@@ -18,8 +18,10 @@ This file is part of GuitarSynth2.
 #include <math.h>
 
 GaussSynth::GaussSynth():
-    SynthBase("GaussSynth")
+    SynthBase(string("GaussSynth"))
 {
+    addParameter(sdfactor,kParameterIsAutomable,mName+" Width",mName+"Width","",ParameterRanges(0.1,10,0.1)
+                 ,SynthBaseUpdateWaveTable(this));
 }
 
 void GaussSynth::InitSynth()

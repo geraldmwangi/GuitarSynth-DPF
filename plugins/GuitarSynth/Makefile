@@ -21,7 +21,8 @@ OBJS_DSP = \
 	sinussynth.cpp.o \
 	sawsynth.cpp.o \
 	squaresynth.cpp.o \
-	parameterwithref.cpp.o
+	parameterwithref.cpp.o\
+	parameteredobject.cpp.o
 
 
 
