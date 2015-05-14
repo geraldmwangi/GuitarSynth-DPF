@@ -9,7 +9,9 @@ libjack, aubio
 Compile:
 
 cd ./path/to/GuitarSynth-DPF
+
 git submodule init
+
 git submodule update 
 
 make
