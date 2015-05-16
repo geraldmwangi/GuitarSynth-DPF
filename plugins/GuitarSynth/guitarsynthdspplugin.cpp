@@ -16,6 +16,13 @@ GuitarSynthDSPPlugin::GuitarSynthDSPPlugin():
     mInstance->addSynth(new SawSynth);
     mInstance->addSynth(new GaussSynth);
     mInstance->addSynth(new SquareSynth);
+    mParameters=mInstance->getParameters();
+    for(int s=0;s<mInstance->mSynths.size();s++)
+    {
+        vector<ParameterWithRef> params=mInstance->mSynths[s]->getParameters();
+        for(int p=0;p<params.size();p++)
+            mParameters.push_back(params[p]);
+    }
 }
 
 GuitarSynthDSPPlugin::~GuitarSynthDSPPlugin()

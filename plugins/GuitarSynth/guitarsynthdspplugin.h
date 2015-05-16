@@ -57,6 +57,7 @@ public:
     void run(const float** inputs, float** outputs, uint32_t frames) override;
 private:
     GSEngine* mInstance;
+    vector<ParameterWithRef> mParameters;
 
     // -------------------------------------------------------------------
 };
