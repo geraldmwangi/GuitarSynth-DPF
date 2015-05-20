@@ -72,20 +72,6 @@ protected:
 
 };
 
-class SynthBaseUpdateWaveTable:public ParameterFunctionCallback
-{
-    SynthBase* mSynth;
-protected:
-    virtual void postChange()
-    {
-        mSynth->InitSynth();
-    }
 
-public:
-    SynthBaseUpdateWaveTable(SynthBase* synth)
-    {
-        mSynth=synth;
-    }
-};
 
 #endif // SYNTHBASE_H

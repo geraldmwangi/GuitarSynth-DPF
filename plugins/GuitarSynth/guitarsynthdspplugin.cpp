@@ -20,7 +20,7 @@ GuitarSynthDSPPlugin::GuitarSynthDSPPlugin():
     mParameters=mInstance->getParameters();
     for(int s=0;s<mInstance->mSynths.size();s++)
     {
-        vector<ParameterWithRef> params=mInstance->mSynths[s]->getParameters();
+        vector<ParameterWithRef*> params=mInstance->mSynths[s]->getParameters();
         for(int p=0;p<params.size();p++)
             mParameters.push_back(params[p]);
     }
@@ -35,7 +35,7 @@ GuitarSynthDSPPlugin::~GuitarSynthDSPPlugin()
 
 void GuitarSynthDSPPlugin::initParameter(uint32_t index, Parameter &parameter)
 {
-    Parameter par=parameter=mParameters[index];
+    Parameter par=parameter=*mParameters[index];
     parameter.hints=par.hints;
     parameter.name=par.name;
     parameter.ranges=par.ranges;
@@ -53,14 +53,14 @@ void GuitarSynthDSPPlugin::initParameter(uint32_t index, Parameter &parameter)
 float GuitarSynthDSPPlugin::getParameterValue(uint32_t index) const
 {
 
-    ParameterWithRef par=mParameters[index];
-    return par.getParameter();
+    ParameterWithRef* par=mParameters[index];
+    return par->getParameter();
 }
 
 void GuitarSynthDSPPlugin::setParameterValue(uint32_t index, float value)
 {
-        ParameterWithRef par=mParameters[index];
-        par.setParameter(value);
+        ParameterWithRef* par=mParameters[index];
+        par->setParameter(value);
 }
 
 //void GuitarSynthDSPPlugin::loadProgram(uint32_t index)

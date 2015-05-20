@@ -18,6 +18,10 @@ public:
     {
         mObject=object;
     };
+    ParameterFunctionCallback(const ParameterFunctionCallback& src)
+    {
+        mObject=src.mObject;
+    }
 
 
 };

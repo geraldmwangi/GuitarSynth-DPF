@@ -16,12 +16,11 @@ This file is part of GuitarSynth2.
     */
 #include "gausssynth.h"
 #include <math.h>
-
+#include <parameterupdatewave.h>
 GaussSynth::GaussSynth():
     SynthBase(string("GaussSynth"))
 {
-    addParameter(sdfactor,kParameterIsAutomable,mName+" Width",mName+"Width","",ParameterRanges(0.1,10,0.1)
-                 ,SynthBaseUpdateWaveTable(this));
+    addParameter(new ParameterUpdateWave(this,sdfactor,kParameterIsAutomable,mName+" Width",mName+"Width","",ParameterRanges(0.1,0.1,10)));
 }
 
 void GaussSynth::InitSynth()

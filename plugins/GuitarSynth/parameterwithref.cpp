@@ -4,8 +4,18 @@
 
 
 
-ParameterWithRef::ParameterWithRef(float &par, uint32_t hints, string name, string symbol, string unit, ParameterRanges ranges, ParameterFunctionCallback action):
-    mParameter(par),mCallback(action)
+void ParameterWithRef::preChange()
+{
+
+}
+
+void ParameterWithRef::postChange()
+{
+
+}
+
+ParameterWithRef::ParameterWithRef(float &par, uint32_t hints, string name, string symbol, string unit, ParameterRanges ranges):
+    mParameter(par)
 {
     Parameter::hints=hints;
     Parameter::name=name.c_str()+'\0';
@@ -14,11 +24,20 @@ ParameterWithRef::ParameterWithRef(float &par, uint32_t hints, string name, stri
     Parameter::unit=unit.c_str()+'\0';
 }
 
+ParameterWithRef::~ParameterWithRef()
+{
+//    if(mCallback)
+//        delete mCallback;
+}
+
 void ParameterWithRef::setParameter(float val)
 {
-    mCallback.preChange();
-    mParameter=val;
-    mCallback.postChange();
+
+        preChange();
+        mParameter=val;
+
+        postChange();
+
 }
 
 float ParameterWithRef::getParameter()

@@ -35,11 +35,11 @@ SynthBase::SynthBase(string name):
     phase=0;
     ampl=0;
     addParameter(transposefactor,kParameterIsAutomable,mName+" Transpose",mName+"Tr",
-                 "",ParameterRanges(-1,1,0.1));
+                 "",ParameterRanges(0.1,-1,1));
     addParameter(phase,kParameterIsAutomable,mName+" Phase",mName+"Ph",
-                 "",ParameterRanges(-1,1,0.1));
+                 "",ParameterRanges(0.1,-1,1));
     addParameter(ampl,kParameterIsAutomable,mName+" Gain",mName+"Gain",
-                 "",ParameterRanges(0,1,0.1));
+                 "",ParameterRanges(0.1,0,1));
 }
 
 SynthBase::~SynthBase()

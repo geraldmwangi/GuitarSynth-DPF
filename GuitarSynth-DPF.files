@@ -132,3 +132,5 @@ plugins/GuitarSynth/parameteredobject.h
 plugins/GuitarSynth/parameteredobject.cpp
 plugins/GuitarSynth/parameterfunctioncallback.h
 plugins/GuitarSynth/parameterwithref.cpp
+plugins/GuitarSynth/parameterupdatewave.h
+plugins/GuitarSynth/parameterupdatewave.cpp
