@@ -27,7 +27,7 @@ SynthBase::SynthBase(string name):
     mSamplerate=0;
     mBufferSize=0;
     mWaveTable=0;
-    mWindow=0;
+ 
     mOutBuffer=0;
     transposefactor=0;
     curFreq=BASE_FREQ;
@@ -46,8 +46,7 @@ SynthBase::~SynthBase()
 {
     if(mWaveTable)
         delete [] mWaveTable;
-    if(mWindow)
-        delete [] mWindow;
+
     if(mOutBuffer)
         delete [] mOutBuffer;
 
@@ -62,17 +61,6 @@ void SynthBase::InitBaseSynth()
             delete [] mWaveTable;
         mWaveTable=new float[mWaveTableSize];
 
-    }
-    if(mWindow)
-        delete [] mWindow;
-    if(mBufferSize!=0)
-        mWindow=new float[mBufferSize];
-    //Blackman-Harris see wikipedia
-    float a=0.5;
-    for(int i=0;i<mBufferSize;i++)
-    {
-        mWindow[i]=(1-a)/2-1/2*cos(2*M_PI*i/(mBufferSize-1))
-                +a/2*cos(4*M_PI*i/(mBufferSize-1));
     }
 
     if(mOutBuffer)
@@ -96,37 +84,40 @@ void SynthBase::InitBaseSynth()
 
 
 
-
+//set the samplerate
 void SynthBase::setSamplerate(int sr)
 {
     mSamplerate=sr;
 }
-
+    //set the buffersize
 void SynthBase::setBufferSize(int bs)
 {
     mBufferSize=bs;
 }
-
+//process: process function of synth
 void SynthBase::process(int frames, float *buffer, float freq)
 {
 
-
+    //compute current frequency and phase
     curFreq=freq*pow(2.0,transposefactor);
     float ph=phase*mWaveTableSize/2;
     for(int i=0;i<frames;i++)
     {
+        //shift wavetable position
         curTablePos+=curFreq/BASE_FREQ;
 
+        //Are we at/over the end of the table
         if(curTablePos>=mWaveTableSize)
         {
             curTablePos-=(mWaveTableSize);
 
         }
 
-
+        //shift by phase
         float tablepos=(((curTablePos+ph)>=mWaveTableSize)?(curTablePos+ph-mWaveTableSize):(curTablePos+ph));
         tablepos=((tablepos<0)?(mWaveTableSize+tablepos):tablepos);
 
+        //linear interpolation
         int intPos=floor(tablepos);
         float delta=tablepos-intPos;
         buffer[i]+=ampl*(mWaveTable[intPos]+delta*(mWaveTable[(intPos+1)%mWaveTableSize]-mWaveTable[intPos]));
@@ -139,9 +130,6 @@ void SynthBase::process(int frames, float *buffer, float freq)
 
 
 }
-
-
-
 void SynthBase::bandpass(int frames, float *buffer)
 {
     float c=std::tan(3.14*freqband/mSamplerate);
@@ -163,6 +151,13 @@ void SynthBase::bandpass(int frames, float *buffer)
     }
 }
 
+//updateWaveTable: update the wavetable when parameters are changed.
+//Use only for parameters that define the form of the wavetable
+void SynthBase::updateWaveTable()
+{
+    InitSynth();
+}
+//InitControls: Use this to initialize the parameters of the synths
 void SynthBase::InitControls()
 {
 }

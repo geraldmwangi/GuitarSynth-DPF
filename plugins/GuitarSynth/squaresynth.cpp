@@ -31,7 +31,7 @@ void SquareSynth::InitSynth()
 
     for(int i=0;i<steps;i++)
     {
-        mWaveTable[i]=1.0f-sqrt(steps*steps-(steps-i)*(steps-i))/steps;
+        mWaveTable[i]=1.0f-sqrt(steps*steps-i*i)/steps;
         mWaveTable[i+mWaveTableSize/2]=-mWaveTable[i];
     }
     for(int i=steps;i<mWaveTableSize/2-steps;i++)

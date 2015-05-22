@@ -19,7 +19,7 @@ This file is part of GuitarSynth2.
 
 #include <gsengine.h>
 #include <string>
-#define BASE_FREQ 180.0f
+#define BASE_FREQ 80.0f
 using namespace std;
 
 
@@ -28,19 +28,28 @@ class SynthBase:public ParameteredObject
 
 public:
     explicit SynthBase(string name);
+    //set the samplerate
     void setSamplerate(int sr);
+    //set the buffersize
     void setBufferSize(int bs);
     ~SynthBase();
 
+    //InitBaseSynth: Init the synth, set the wavetable size
     void InitBaseSynth();
+
+    //InitSynth: virtual function. Use this to initialize the wavetable
     virtual void InitSynth()=0;
+
+//    InitControls: Use this to initialize the parameters of the synths
     virtual void InitControls();
 
-
+    //process: process function of synth
     void process(int frames, float* buffer,float freq);
 
 
-
+    //updateWaveTable: update the wavetable when parameters are changed.
+    //Use only for parameters that define the form of the wavetable
+    void updateWaveTable();
 
 
 
@@ -57,7 +66,6 @@ protected:
     float curFreq;
     float curTablePos;
     float* mWaveTable;
-    float* mWindow;
 
     float* mOutBuffer;
 
@@ -71,7 +79,5 @@ protected:
 
 
 };
-
-
 
 #endif // SYNTHBASE_H

@@ -16,8 +16,9 @@ git submodule update
 
 make
 
-That's it you should have am executable GuitarSynth2.
-Start it, connect in qjackctl an audio source, turn up the gain on one the synths (beware with the square synth!!)
+That's it you should have an lv2/vst/standalone plugin called GuitarSynth.
+Load the plugin in your favourite DAW. By default all gains are down, so no sound will come up.
+Just turn up the gain of a synth and play (beware of the square!)
 You mix the synths by turning up their individual gains.
 Have fun
 
