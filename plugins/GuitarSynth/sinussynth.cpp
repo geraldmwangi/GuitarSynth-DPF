@@ -17,8 +17,8 @@ This file is part of GuitarSynth2.
 #include "sinussynth.h"
 #include <math.h>
 
-SinusSynth::SinusSynth():
-    SynthBase(string("SinusSynth"))
+SinusSynth::SinusSynth(string name):
+    SynthBase(string("SinusSynth"+name))
 {
 }
 

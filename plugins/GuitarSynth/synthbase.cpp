@@ -40,6 +40,8 @@ SynthBase::SynthBase(string name):
                  "",ParameterRanges(0.1,-1,1));
     addParameter(ampl,kParameterIsAutomable,mName+" Gain",mName+"Gain",
                  "",ParameterRanges(0.1,0,1));
+    addParameter(mConvolveIn,kParameterIsBoolean,mName+" Overlay Input",mName+"OvIn",
+                 "",ParameterRanges(0.1,0,1));
 }
 
 SynthBase::~SynthBase()
@@ -95,7 +97,7 @@ void SynthBase::setBufferSize(int bs)
     mBufferSize=bs;
 }
 //process: process function of synth
-void SynthBase::process(int frames, float *buffer, float freq)
+void SynthBase::process(int frames, float *buffer, float freq,const float *inbuf)
 {
 
     //compute current frequency and phase
@@ -120,12 +122,25 @@ void SynthBase::process(int frames, float *buffer, float freq)
         //linear interpolation
         int intPos=floor(tablepos);
         float delta=tablepos-intPos;
-        buffer[i]+=ampl*(mWaveTable[intPos]+delta*(mWaveTable[(intPos+1)%mWaveTableSize]-mWaveTable[intPos]));
+        mOutBuffer[i]=ampl*(mWaveTable[intPos]+delta*(mWaveTable[(intPos+1)%mWaveTableSize]-mWaveTable[intPos]));
 //                +0.5*delta*delta*(mWaveTable[(intPos==0)?(mWaveTableSize-1):(intPos-1)]+mWaveTable[(intPos+1)%mWaveTableSize]-2*mWaveTable[intPos]));
 //        bandpass(frames,buffer);
 
 
     }
+    if(mConvolveIn*ampl)
+        for(int i=0;i<frames;i++)
+            buffer[i]+=mOutBuffer[i]*inbuf[i];
+    else
+        for(int i=0;i<frames;i++)
+            buffer[i]+=mOutBuffer[i];
+//    if(mConvolveIn)
+//       for(int i=0;i<frames;i++)
+//           if(inbuf[i]>0)
+//                buffer[i]*=pow(inbuf[i],mConvolveIn);
+//           else
+//                buffer[i]*=-pow(fabs(inbuf[i]),mConvolveIn);
+
 
 
 

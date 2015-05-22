@@ -24,7 +24,7 @@ class SquareSynth : public SynthBase
 
 
 public:
-    SquareSynth();
+    SquareSynth(string name);
 
     virtual void InitSynth();
     virtual void InitControls();

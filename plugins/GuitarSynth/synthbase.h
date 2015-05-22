@@ -44,7 +44,7 @@ public:
     virtual void InitControls();
 
     //process: process function of synth
-    void process(int frames, float* buffer,float freq);
+    void process(int frames, float* buffer, float freq, const float *inbuf);
 
 
     //updateWaveTable: update the wavetable when parameters are changed.
@@ -73,6 +73,8 @@ protected:
     int mBufferSize;
     int mSamplerate;
     string mSynthname;
+
+    float mConvolveIn;
 
 
 

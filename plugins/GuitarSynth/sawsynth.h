@@ -20,7 +20,7 @@ This file is part of GuitarSynth2.
 class SawSynth : public SynthBase
 {
 public:
-    SawSynth();
+    SawSynth(string name);
     virtual void InitSynth();
 };
 

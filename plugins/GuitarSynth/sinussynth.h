@@ -20,7 +20,7 @@ This file is part of GuitarSynth2.
 class SinusSynth : public SynthBase
 {
 public:
-    SinusSynth();
+    SinusSynth(string name);
     virtual void InitSynth();
 };
 

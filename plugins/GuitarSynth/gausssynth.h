@@ -20,7 +20,7 @@ This file is part of GuitarSynth2.
 class GaussSynth : public SynthBase
 {
 public:
-    GaussSynth();
+    GaussSynth(string name);
     virtual void InitSynth();
     virtual void InitControls();
 //private:

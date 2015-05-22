@@ -17,8 +17,8 @@ This file is part of GuitarSynth2.
 #include "gausssynth.h"
 #include <math.h>
 #include <parameterupdatewave.h>
-GaussSynth::GaussSynth():
-    SynthBase(string("GaussSynth"))
+GaussSynth::GaussSynth(string name):
+    SynthBase(string("GaussSynth"+name))
 {
     addParameter(new ParameterUpdateWave(this,sdfactor,kParameterIsAutomable,mName+" Width",mName+"Width","",ParameterRanges(0.1,0.1,10)));
 }

@@ -10,13 +10,17 @@ Plugin* DISTRHO::createPlugin()
     return new GuitarSynthDSPPlugin();
 }
 GuitarSynthDSPPlugin::GuitarSynthDSPPlugin():
-    Plugin(15,0,0)
+    Plugin(37,0,0)
 {
     mInstance=new GSEngine();
-    mInstance->addSynth(new SinusSynth);
-    mInstance->addSynth(new SawSynth);
-    mInstance->addSynth(new GaussSynth);
-    mInstance->addSynth(new SquareSynth);
+    mInstance->addSynth(new SinusSynth("1"));
+    mInstance->addSynth(new SinusSynth("2"));
+    mInstance->addSynth(new SawSynth("1"));
+    mInstance->addSynth(new SawSynth("2"));
+    mInstance->addSynth(new GaussSynth("1"));
+    mInstance->addSynth(new GaussSynth("2"));
+    mInstance->addSynth(new SquareSynth("1"));
+    mInstance->addSynth(new SquareSynth("2"));
     mParameters=mInstance->getParameters();
     for(int s=0;s<mInstance->mSynths.size();s++)
     {

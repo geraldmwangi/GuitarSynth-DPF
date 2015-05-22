@@ -157,7 +157,7 @@ int GSEngine::process(const float **inputs, float **outputs, uint32_t frames)
         if(freq>0)
             for(int i=0;i<mSynths.size();i++)
             {
-                mSynths[i]->process(frames,out,freq);
+                mSynths[i]->process(frames,out,freq,in);
 
             }
 //        for(uint32_t f=0;f<frames;f++)

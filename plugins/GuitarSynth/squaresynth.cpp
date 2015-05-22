@@ -17,8 +17,8 @@ This file is part of GuitarSynth2.
 #include "squaresynth.h"
 #include <math.h>
 #include <parameterupdatewave.h>
-SquareSynth::SquareSynth():
-    SynthBase("SquareSynth")
+SquareSynth::SquareSynth(string name):
+    SynthBase("SquareSynth"+name)
 {
     addParameter(new ParameterUpdateWave(this,radius,kParameterIsAutomable,mName+" Radius",mName+"Radius","",ParameterRanges(0.1,0,1)));
 }
