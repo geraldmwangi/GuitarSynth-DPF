@@ -129,9 +129,9 @@ void SynthBase::process(int frames, float *buffer, float freq)
 
         int intPos=floor(tablepos);
         float delta=tablepos-intPos;
-        mOutBuffer[i]+=ampl*(mWaveTable[intPos]+delta*(mWaveTable[(intPos+1)%mWaveTableSize]-mWaveTable[intPos]));
+        buffer[i]+=ampl*(mWaveTable[intPos]+delta*(mWaveTable[(intPos+1)%mWaveTableSize]-mWaveTable[intPos]));
 //                +0.5*delta*delta*(mWaveTable[(intPos==0)?(mWaveTableSize-1):(intPos-1)]+mWaveTable[(intPos+1)%mWaveTableSize]-2*mWaveTable[intPos]));
-        bandpass(frames,buffer);
+//        bandpass(frames,buffer);
 
 
     }

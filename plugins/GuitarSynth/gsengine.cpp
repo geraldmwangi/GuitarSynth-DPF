@@ -46,8 +46,8 @@ GSEngine::GSEngine():
     mSamplerate=44100;
     mBufferSize=512;
     mInputThreshold=0;
-    addParameter(mInputThreshold,kParameterIsLogarithmic,"Input Threshold","InputThr","db",
-                 ParameterRanges(0.1,0.1,1));
+    addParameter(mInputThreshold,kParameterIsAutomable,"Input Threshold","InputThr","db",
+                 ParameterRanges(0.1,0.0,1));
 
 }
 
