@@ -42,8 +42,8 @@ GSEngine::GSEngine():
     mPitchDetector=0;
     mDampingFactor=10.0;
     mCuttOfFreq=6000;
-    mInputGain=1.0;
-    mOutputGain=1.0;
+//    mInputGain=1.0;
+//    mOutputGain=1.0;
     mSamplerate=44100;
     mBufferSize=512;
     mInputThreshold=0;
