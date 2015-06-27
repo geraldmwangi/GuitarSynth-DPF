@@ -8,20 +8,14 @@
 
 include ../../Makefile.mk
 
-# No UI yet, disable DGL usage
-HAVE_DGL = false
-
 # --------------------------------------------------------------
 # Basic setup
 
 TARGET_DIR = ../../bin
 
-BASE_FLAGS += $(AUBIO_FLAGS)
-LINK_FLAGS += $(AUBIO_LIBS)
-
 BUILD_C_FLAGS   += -I.
 BUILD_CXX_FLAGS += -I. -I../../dpf/distrho -I../../dpf/dgl
-
+LINK_FLAGS += -laubio -L../../dpf/
 ifeq ($(HAVE_DGL),true)
 BASE_FLAGS += -DHAVE_DGL
 endif

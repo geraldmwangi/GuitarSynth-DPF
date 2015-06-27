@@ -12,7 +12,7 @@ all: libs plugins gen
 
 libs:
 ifeq ($(HAVE_DGL),true)
-# 	$(MAKE) -C dpf/dgl
+	$(MAKE) -C dpf/dgl
 endif
 
 plugins: libs

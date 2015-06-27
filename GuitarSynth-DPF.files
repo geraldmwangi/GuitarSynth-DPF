@@ -134,3 +134,7 @@ plugins/GuitarSynth/parameterfunctioncallback.h
 plugins/GuitarSynth/parameterwithref.cpp
 plugins/GuitarSynth/parameterupdatewave.h
 plugins/GuitarSynth/parameterupdatewave.cpp
+plugins/GuitarSynth/guitarsynthguiplugin.h
+plugins/GuitarSynth/guitarsynthguiplugin.cpp
+plugins/GuitarSynth/dial.h
+plugins/GuitarSynth/dial.cpp
