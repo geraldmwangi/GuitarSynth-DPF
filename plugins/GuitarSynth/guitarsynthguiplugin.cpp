@@ -3,7 +3,8 @@ START_NAMESPACE_DISTRHO
 GuitarSynthGuiPlugin::GuitarSynthGuiPlugin(): UI(512,512)
 {
     show();
-    m_dial=new Dial(this->getParentWindow());
+//    fillColor(255,255,0);
+    m_dial=new DGL::Dial(this);
     m_dial->show();
 }
 
@@ -30,8 +31,10 @@ void GuitarSynthGuiPlugin::stateChanged(const char *key, const char *value)
 void GuitarSynthGuiPlugin::onNanoDisplay()
 {
 
-
-    m_dial->show();
+//    rect(0,0,100,100);
+//    fillColor(255,255,0);
+//    fill();
+//    m_dial->show();
 
 }
 
