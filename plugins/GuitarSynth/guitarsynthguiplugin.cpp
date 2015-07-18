@@ -2,7 +2,9 @@
 START_NAMESPACE_DISTRHO
 GuitarSynthGuiPlugin::GuitarSynthGuiPlugin(): UI(512,512)
 {
-
+    show();
+    m_dial=new Dial(this->getParentWindow());
+    m_dial->show();
 }
 
 GuitarSynthGuiPlugin::~GuitarSynthGuiPlugin()
@@ -27,8 +29,10 @@ void GuitarSynthGuiPlugin::stateChanged(const char *key, const char *value)
 
 void GuitarSynthGuiPlugin::onNanoDisplay()
 {
-    this->fillColor(255,0,0);
-    m_dial=new Dial(this);
+
+
+    m_dial->show();
+
 }
 
 UI* createUI()

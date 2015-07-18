@@ -6,14 +6,14 @@
 //#include "ImageButton.hpp"
 //#include "ImageKnob.hpp"
 //#include "ImageSlider.hpp"
-USE_NAMESPACE_DISTRHO
-USE_NAMESPACE_DGL
-class Dial: public UIWidget
+
+class Dial: public NanoWidget
 {
 public:
-    Dial(Window* parent);
+    Dial(DGL::Window &parent);
 protected:
     void onNanoDisplay();
 };
+
 
 #endif // DIAL_H
