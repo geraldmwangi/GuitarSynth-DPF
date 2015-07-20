@@ -2,10 +2,11 @@
 START_NAMESPACE_DISTRHO
 GuitarSynthGuiPlugin::GuitarSynthGuiPlugin(): UI(512,512)
 {
-    show();
+//    show();
+
 //    fillColor(255,255,0);
     m_dial=new DGL::Dial(this);
-    m_dial->show();
+//    m_dial->show();
 }
 
 GuitarSynthGuiPlugin::~GuitarSynthGuiPlugin()
