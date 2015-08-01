@@ -17,7 +17,7 @@ This file is part of GuitarSynth2.
 #include "synthbase.h"
 #include <gsengine.h>
 #include <math.h>
-
+#include <iostream>
 SynthBase::SynthBase(string name):
     ParameteredObject(name,name,string("Synth"))
 {
@@ -29,6 +29,8 @@ SynthBase::SynthBase(string name):
     mWaveTable=0;
  
     mOutBuffer=0;
+    mPeakBuffer=0;
+    mPeakBuffer1=0;
     transposefactor=0;
     curFreq=BASE_FREQ;
     curTablePos=0;
@@ -40,8 +42,14 @@ SynthBase::SynthBase(string name):
                  "",ParameterRanges(0.1,-1,1));
     addParameter(ampl,kParameterIsAutomable,mName+" Gain",mName+"Gain",
                  "",ParameterRanges(0.1,0,1));
-    addParameter(mConvolveIn,kParameterIsBoolean,mName+" Overlay Input",mName+"OvIn",
+    addParameter(mConvolveIn,kParameterIsAutomable,mName+" Overlay Input",mName+"OvIn",
                  "",ParameterRanges(0.1,0,1));
+//    addParameter(freqcuttoff,kParameterIsAutomable,mName+" Bandpass Cuttoff",mName+"BandCut",
+//                 "",ParameterRanges(0.01,0,0.25));
+//    addParameter(freqband,kParameterIsAutomable,mName+" Bandpass width",mName+"BandWidth",
+//                 "",ParameterRanges(0.01,0,0.25));
+//    addParameter(peakgain,kParameterIsAutomable,mName+" Bandpass peak gain",mName+"BandPeakGain",
+//                 "",ParameterRanges(0.1,-20.0,20.0));
 }
 
 SynthBase::~SynthBase()
@@ -51,6 +59,12 @@ SynthBase::~SynthBase()
 
     if(mOutBuffer)
         delete [] mOutBuffer;
+    if(mPeakBuffer)
+        delete [] mPeakBuffer;
+
+    if(mPeakBuffer1)
+        delete [] mPeakBuffer1;
+
 
 }
 
@@ -68,6 +82,12 @@ void SynthBase::InitBaseSynth()
     if(mOutBuffer)
         delete [] mOutBuffer;
     mOutBuffer=new float[mBufferSize];
+    if(mPeakBuffer)
+        delete [] mPeakBuffer;
+    mPeakBuffer=new float[mBufferSize];
+    if(mPeakBuffer1)
+        delete [] mPeakBuffer1;
+    mPeakBuffer1=new float[mBufferSize];
 
     memset(mWaveTable,0,mWaveTableSize*sizeof(float));
     mDelayIn[0]=0;
@@ -102,7 +122,7 @@ void SynthBase::process(int frames, float *buffer, float freq,const float *inbuf
 
     //compute current frequency and phase
     curFreq=freq*pow(2.0,transposefactor);
-    float ph=phase*mWaveTableSize/2;
+    float ph=phase*mWaveTableSize/2.0f;
     for(int i=0;i<frames;i++)
     {
         //shift wavetable position
@@ -128,40 +148,42 @@ void SynthBase::process(int frames, float *buffer, float freq,const float *inbuf
 
 
     }
-    if(mConvolveIn*ampl)
-        for(int i=0;i<frames;i++)
-            buffer[i]+=mOutBuffer[i]*inbuf[i];
-    else
-        for(int i=0;i<frames;i++)
-            buffer[i]+=mOutBuffer[i];
-//    if(mConvolveIn)
-//       for(int i=0;i<frames;i++)
-//           if(inbuf[i]>0)
-//                buffer[i]*=pow(inbuf[i],mConvolveIn);
-//           else
-//                buffer[i]*=-pow(fabs(inbuf[i]),mConvolveIn);
+//    bandpass(frames,mBandPassBuffer);
+//    peakpass(frames);
+    for(int i=0;i<frames;i++)
+        buffer[i]+=mOutBuffer[i]*(mConvolveIn*(inbuf[i]-1.0)+1.0);
+
 
 
 
 
 }
-void SynthBase::bandpass(int frames, float *buffer)
+void SynthBase::peakpass(int frames)
 {
-    float c=std::tan(3.14*freqband/mSamplerate);
-    float d=std::tan(3.14*freqcuttoff/mSamplerate);
+    float d=-std::cos(3.14*freqcuttoff);
+    float v0=pow(10.0,peakgain/20.0);
+    float h0=v0-1.0;
+    float aB=(std::tan(3.14*freqband)-1.0)/(std::tan(3.14*freqband)+1.0);
+    if(mAb!=aB)
+    {
+        std::cout<<"ab: "<<aB<<endl;
+        std::cout.flush();
+        mAb=aB;
+    }
     for(int i=0;i<frames;i++)
     {
-       buffer[i]=-c*mOutBuffer[i]+d*(1-c)*mDelayIn[0]+mDelayIn[1]
-               +d*(1-c)*mDelayOut[0]-c*mDelayOut[1];
+        mPeakBuffer1[i]=-aB*mOutBuffer[i]+d*(1.0-aB)*mDelayIn[0]+mDelayIn[1]
+                -d*(1.0-aB)*mDelayOut[0]+aB*mDelayOut[1];
+        mPeakBuffer[i]=h0/2.0*(mOutBuffer[i]-mPeakBuffer1[i])+mOutBuffer[i];
        if(i>0)
        {
            mDelayIn[0]=mOutBuffer[i-1];
-           mDelayOut[0]=buffer[i-1];
+           mDelayOut[0]=mPeakBuffer1[i-1];
        }
        if(i>1)
        {
            mDelayIn[1]=mOutBuffer[i-2];
-           mDelayOut[1]=buffer[i-2];
+           mDelayOut[1]=mPeakBuffer1[i-2];
        }
     }
 }

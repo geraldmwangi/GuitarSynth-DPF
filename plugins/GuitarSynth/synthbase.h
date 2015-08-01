@@ -55,12 +55,13 @@ public:
 
     float freqband;
     float freqcuttoff;
-
+    float peakgain;
+    float mAb;
     float phase;
     float ampl;
     float transposefactor;
 protected:
-    void bandpass(int frames, float* buffer);
+    void peakpass(int frames);
     float mDelayIn[2];
     float mDelayOut[2];
     float curFreq;
@@ -68,6 +69,8 @@ protected:
     float* mWaveTable;
 
     float* mOutBuffer;
+    float* mPeakBuffer;
+    float* mPeakBuffer1;
 
     int mWaveTableSize;
     int mBufferSize;
