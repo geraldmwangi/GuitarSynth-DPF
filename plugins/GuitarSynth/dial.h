@@ -9,8 +9,9 @@
 START_NAMESPACE_DGL
 class Dial: public NanoWidget
 {
+   int m_rad;
 public:
-    Dial(NanoWidget *parent);
+    Dial(NanoWidget *parent,int rad);
 protected:
     void onNanoDisplay();
 };

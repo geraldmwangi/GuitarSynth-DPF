@@ -18,7 +18,7 @@ protected:
     virtual void stateChanged(const char* key, const char* value);
     virtual void onNanoDisplay();
 private:
-    DGL::Dial* m_dial;
+    DGL::Dial* m_dial,*m_dial2;
     DISTRHO_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(GuitarSynthGuiPlugin)
 
 };
