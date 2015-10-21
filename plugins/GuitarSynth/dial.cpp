@@ -3,7 +3,7 @@
 
 
 START_NAMESPACE_DGL
-Dial::Dial(DGL::NanoWidget *parent,int rad): UIWidget(parent)
+Dial::Dial(DGL::NanoWidget *parent,int rad): NanoWidget(parent)
 {
     m_rad=rad;
 
