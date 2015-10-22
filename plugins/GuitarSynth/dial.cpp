@@ -3,7 +3,7 @@
 
 
 START_NAMESPACE_DGL
-Dial::Dial(DGL::NanoWidget *parent,int rad): UIWidget(parent)
+Dial::Dial(DGL::NanoWidget *parent,int rad): NanoWidget(parent)
 {
     m_rad=rad;
 
@@ -15,13 +15,15 @@ Dial::Dial(DGL::NanoWidget *parent,int rad): UIWidget(parent)
 
 void Dial::onNanoDisplay()
 {
+    const int x = getAbsoluteX();
+    const int y = getAbsoluteY();
 
 //    fillColor(255,0,0);
 //    fill();
 //    circle(50,50,50);
     fillColor(0,255,0);
 
-    circle(0,50,m_rad);
+    circle(x,y+50,m_rad);
     fill();
 
 }

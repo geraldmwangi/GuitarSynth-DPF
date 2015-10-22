@@ -1,6 +1,5 @@
 #ifndef DIAL_H
 #define DIAL_H
-#include "DistrhoUI.hpp"
 #include "NanoVG.hpp"
 //#include "ImageAboutWindow.hpp"
 //#include "ImageButton.hpp"
